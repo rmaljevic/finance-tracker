@@ -4,6 +4,7 @@ const descriptionInput = document.getElementById("description");
 const amountInput = document.getElementById("amount");
 const typeInput = document.getElementById("type");
 const addButton = document.getElementById("addButton");
+const transactionList = document.getElementById("transactionList");
 
 addButton.addEventListener("click", function() {
 
@@ -18,6 +19,10 @@ addButton.addEventListener("click", function() {
     };
 
     transactions.push(transaction);
+    
+    const listItem = document.createElement("li");
 
-    console.log(transactions);
+listItem.textContent = description + " - €" + amount + " (" + type + ")";
+
+transactionList.appendChild(listItem);
 });
