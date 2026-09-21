@@ -5,6 +5,23 @@ const amountInput = document.getElementById("amount");
 const typeInput = document.getElementById("type");
 const addButton = document.getElementById("addButton");
 const transactionList = document.getElementById("transactionList");
+const balanceDisplay = document.getElementById("balance");
+
+function updateBalance() {
+
+    let balance = 0;
+
+    for (let transaction of transactions) {
+
+        if (transaction.type === "income") {
+            balance += transaction.amount;
+        } else {
+            balance -= transaction.amount;
+        }
+    }
+
+    balanceDisplay.textContent = "€" + balance;
+}
 
 addButton.addEventListener("click", function() {
 
@@ -25,4 +42,5 @@ addButton.addEventListener("click", function() {
 listItem.textContent = description + " - €" + amount + " (" + type + ")";
 
 transactionList.appendChild(listItem);
+    updateBalance();
 });
