@@ -42,5 +42,8 @@ addButton.addEventListener("click", function() {
 listItem.textContent = description + " - €" + amount + " (" + type + ")";
 
 transactionList.appendChild(listItem);
-    updateBalance();
+    
+updateBalance();
+
+    
 });
