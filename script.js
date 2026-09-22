@@ -29,6 +29,11 @@ addButton.addEventListener("click", function() {
     const amount = Number(amountInput.value);
     const type = typeInput.value;
 
+    if (description === "" || amount <= 0) {
+    alert("Please enter a valid description and amount.");
+    return;
+}
+
     const transaction = {
         description: description,
         amount: amount,
