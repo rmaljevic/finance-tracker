@@ -45,5 +45,8 @@ transactionList.appendChild(listItem);
     
 updateBalance();
 
+descriptionInput.value = "";
+amountInput.value = "";
+
     
 });
