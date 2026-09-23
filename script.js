@@ -45,6 +45,15 @@ addButton.addEventListener("click", function() {
     const listItem = document.createElement("li");
 
 listItem.textContent = description + " - €" + amount + " (" + type + ")";
+    
+const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    
+listItem.appendChild(deleteButton);
+    
+deleteButton.addEventListener("click", function() {
+    listItem.remove();
+});
 
 transactionList.appendChild(listItem);
     
