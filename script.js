@@ -29,11 +29,6 @@ addButton.addEventListener("click", function() {
     const amount = Number(amountInput.value);
     const type = typeInput.value;
 
-    if (description === "" || amount <= 0) {
-    alert("Please enter a valid description and amount.");
-    return;
-}
-
     const transaction = {
         description: description,
         amount: amount,
@@ -41,32 +36,31 @@ addButton.addEventListener("click", function() {
     };
 
     transactions.push(transaction);
-    
+
     const listItem = document.createElement("li");
 
-listItem.textContent = description + " - €" + amount + " (" + type + ")";
-    
-const deleteButton = document.createElement("button");
+    listItem.textContent = description + " - €" + amount + " (" + type + ")";
+
+    const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
-    
-listItem.appendChild(deleteButton);
-    
-deleteButton.addEventListener("click", function() {
-    const index = transactions.indexOf(transaction);
 
-    transactions.splice(index, 1);
+    listItem.appendChild(deleteButton);
 
-    listItem.remove();
+    deleteButton.addEventListener("click", function() {
+
+        const index = transactions.indexOf(transaction);
+
+        transactions.splice(index, 1);
+
+        listItem.remove();
+
+        updateBalance();
+    });
+
+    transactionList.appendChild(listItem);
 
     updateBalance();
-});
 
-transactionList.appendChild(listItem);
-    
-updateBalance();
-
-descriptionInput.value = "";
-amountInput.value = "";
-
-    
+    descriptionInput.value = "";
+    amountInput.value = "";
 });
