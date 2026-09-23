@@ -52,7 +52,13 @@ const deleteButton = document.createElement("button");
 listItem.appendChild(deleteButton);
     
 deleteButton.addEventListener("click", function() {
+    const index = transactions.indexOf(transaction);
+
+    transactions.splice(index, 1);
+
     listItem.remove();
+
+    updateBalance();
 });
 
 transactionList.appendChild(listItem);
