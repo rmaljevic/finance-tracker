@@ -15,6 +15,7 @@ function updateBalance() {
 
     let balance = 0;
     let income = 0;
+    let expenses = 0;
 
     for (let transaction of transactions) {
 
@@ -23,11 +24,14 @@ function updateBalance() {
              income += transaction.amount;
         } else {
             balance -= transaction.amount;
+            expenses += transaction.amount;
         }
     }
 
     balanceDisplay.textContent = "€" + balance;
     incomeDisplay.textContent = "€" + income;
+    const expensesDisplay = document.getElementById("expenses");
+expensesDisplay.textContent = "€" + expenses;
 }
 //Dodati novi transakciju
 addButton.addEventListener("click", function() {
