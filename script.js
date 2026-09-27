@@ -8,16 +8,19 @@ const typeInput = document.getElementById("type");
 const addButton = document.getElementById("addButton");
 const transactionList = document.getElementById("transactionList");
 const balanceDisplay = document.getElementById("balance");
+const incomeDisplay = document.getElementById("income");
 
 //upodate balance
 function updateBalance() {
 
     let balance = 0;
+    let income = 0;
 
     for (let transaction of transactions) {
 
         if (transaction.type === "income") {
             balance += transaction.amount;
+             income += transaction.amount;
         } else {
             balance -= transaction.amount;
         }
