@@ -27,6 +27,7 @@ function updateBalance() {
     }
 
     balanceDisplay.textContent = "€" + balance;
+    incomeDisplay.textContent = "€" + income;
 }
 //Dodati novi transakciju
 addButton.addEventListener("click", function() {
