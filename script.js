@@ -28,7 +28,7 @@ function updateBalance() {
         }
     }
 
-    balanceDisplay.textContent = "€" + balance;
+    balanceDisplay.textContent = "€" + balance.toFixed(2);
     incomeDisplay.textContent = "€" + income;
     const expensesDisplay = document.getElementById("expenses");
 expensesDisplay.textContent = "€" + expenses;
