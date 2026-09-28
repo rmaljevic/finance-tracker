@@ -1,6 +1,13 @@
 //Niz transakcija
 let transactions = [];
 
+// Ucitavanje sacuvanih transakcija
+let savedTransactions = localStorage.getItem("transactions");
+
+if (savedTransactions) {
+    transactions = JSON.parse(savedTransactions);
+}
+
 //uzimanje elementaa sa html
 const descriptionInput = document.getElementById("description");
 const amountInput = document.getElementById("amount");
