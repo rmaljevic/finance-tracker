@@ -90,3 +90,15 @@ addButton.addEventListener("click", function() {
     descriptionInput.value = "";
     amountInput.value = "";
 });
+
+// Prikaz sacuvanih transakcija nakon refresha
+for (let transaction of transactions) {
+
+    const listItem = document.createElement("li");
+
+    listItem.textContent = transaction.description + " - €" + transaction.amount.toFixed(2) + " (" + transaction.type + ")";
+
+    transactionList.appendChild(listItem);
+}
+
+updateBalance();
