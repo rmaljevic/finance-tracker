@@ -55,6 +55,7 @@ addButton.addEventListener("click", function() {
     };
 
     transactions.push(transaction);
+    localStorage.setItem("transactions", JSON.stringify(transactions));
 
     //Pravljenje premdemta ili ti stavke u listi
     const listItem = document.createElement("li");
@@ -73,6 +74,8 @@ addButton.addEventListener("click", function() {
         const index = transactions.indexOf(transaction);
 
         transactions.splice(index, 1);
+
+        localStorage.setItem("transactions", JSON.stringify(transactions));
 
         listItem.remove();
         
