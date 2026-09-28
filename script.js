@@ -52,7 +52,7 @@ addButton.addEventListener("click", function() {
     //Pravljenje premdemta ili ti stavke u listi
     const listItem = document.createElement("li");
 
-    listItem.textContent = description + " - €" + amount + " (" + type + ")";
+    listItem.textContent = description + " - €" + amount.toFixed(2) + " (" + type + ")";
 
     //dugme za brisanje
     const deleteButton = document.createElement("button");
