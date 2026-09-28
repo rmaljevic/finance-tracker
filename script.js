@@ -29,9 +29,9 @@ function updateBalance() {
     }
 
     balanceDisplay.textContent = "€" + balance.toFixed(2);
-    incomeDisplay.textContent = "€" + income;
+    incomeDisplay.textContent = "€" + income.toFixed(2);
     const expensesDisplay = document.getElementById("expenses");
-expensesDisplay.textContent = "€" + expenses;
+expensesDisplay.textContent = "€" + expenses.toFixed(2);
 }
 //Dodati novi transakciju
 addButton.addEventListener("click", function() {
