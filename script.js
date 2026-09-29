@@ -1,4 +1,4 @@
-//Niz transakcija
+// Niz transakcija
 let transactions = [];
 
 // Ucitavanje sacuvanih transakcija
@@ -8,7 +8,7 @@ if (savedTransactions) {
     transactions = JSON.parse(savedTransactions);
 }
 
-//uzimanje elementaa sa html
+// Uzimanje elemenata sa HTML-a
 const descriptionInput = document.getElementById("description");
 const amountInput = document.getElementById("amount");
 const typeInput = document.getElementById("type");
@@ -17,7 +17,7 @@ const transactionList = document.getElementById("transactionList");
 const balanceDisplay = document.getElementById("balance");
 const incomeDisplay = document.getElementById("income");
 
-//upodate balance
+// Update balance
 function updateBalance() {
 
     let balance = 0;
@@ -28,7 +28,7 @@ function updateBalance() {
 
         if (transaction.type === "income") {
             balance += transaction.amount;
-             income += transaction.amount;
+            income += transaction.amount;
         } else {
             balance -= transaction.amount;
             expenses += transaction.amount;
@@ -37,17 +37,19 @@ function updateBalance() {
 
     balanceDisplay.textContent = "€" + balance.toFixed(2);
     incomeDisplay.textContent = "€" + income.toFixed(2);
+
     const expensesDisplay = document.getElementById("expenses");
-expensesDisplay.textContent = "€" + expenses.toFixed(2);
+    expensesDisplay.textContent = "€" + expenses.toFixed(2);
 }
-//Dodati novi transakciju
+
+// Dodavanje nove transakcije
 addButton.addEventListener("click", function() {
 
     const description = descriptionInput.value;
     const amount = Number(amountInput.value);
     const type = typeInput.value;
 
-    //Pravljenje objekta transakcije
+    // Pravljenje objekta transakcije
     const transaction = {
         description: description,
         amount: amount,
@@ -57,18 +59,18 @@ addButton.addEventListener("click", function() {
     transactions.push(transaction);
     localStorage.setItem("transactions", JSON.stringify(transactions));
 
-    //Pravljenje premdemta ili ti stavke u listi
+    // Pravljenje stavke u listi
     const listItem = document.createElement("li");
 
     listItem.textContent = description + " - €" + amount.toFixed(2) + " (" + type + ")";
 
-    //dugme za brisanje
+    // Dugme za brisanje
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
 
     listItem.appendChild(deleteButton);
-    
-    //Brisanje transakcije
+
+    // Brisanje transakcije
     deleteButton.addEventListener("click", function() {
 
         const index = transactions.indexOf(transaction);
@@ -78,25 +80,48 @@ addButton.addEventListener("click", function() {
         localStorage.setItem("transactions", JSON.stringify(transactions));
 
         listItem.remove();
-        
-    //Update posle brisanja
+
+        // Update posle brisanja
         updateBalance();
     });
-//Dodavanje transakcije u listu
+
+    // Dodavanje transakcije u listu
     transactionList.appendChild(listItem);
-//Update stanja
+
+    // Update stanja
     updateBalance();
-//Brisanje iz inputa
+
+    // Brisanje iz inputa
     descriptionInput.value = "";
     amountInput.value = "";
 });
 
-// Prikaz sacuvanih transakcija nakon refresha
+// Prikaz sacuvanih transakcija nakon refresh-a
 for (let transaction of transactions) {
 
     const listItem = document.createElement("li");
 
     listItem.textContent = transaction.description + " - €" + transaction.amount.toFixed(2) + " (" + transaction.type + ")";
+
+    // Dugme za brisanje
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+
+    listItem.appendChild(deleteButton);
+
+    // Brisanje sacuvane transakcije
+    deleteButton.addEventListener("click", function() {
+
+        const index = transactions.indexOf(transaction);
+
+        transactions.splice(index, 1);
+
+        localStorage.setItem("transactions", JSON.stringify(transactions));
+
+        listItem.remove();
+
+        updateBalance();
+    });
 
     transactionList.appendChild(listItem);
 }
