@@ -13,6 +13,7 @@ const descriptionInput = document.getElementById("description");
 const amountInput = document.getElementById("amount");
 const typeInput = document.getElementById("type");
 const addButton = document.getElementById("addButton");
+const clearButton = document.getElementById("clearButton");
 const transactionList = document.getElementById("transactionList");
 const balanceDisplay = document.getElementById("balance");
 const incomeDisplay = document.getElementById("income");
@@ -127,3 +128,15 @@ for (let transaction of transactions) {
 }
 
 updateBalance();
+
+// Brisanje svih transakcija
+clearButton.addEventListener("click", function() {
+
+    transactions = [];
+
+    localStorage.removeItem("transactions");
+
+    transactionList.innerHTML = "";
+
+    updateBalance();
+});
