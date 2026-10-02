@@ -50,6 +50,12 @@ addButton.addEventListener("click", function() {
     const amount = Number(amountInput.value);
     const type = typeInput.value;
 
+    // Provjera unosa
+if (description === "" || amount <= 0) {
+    alert("Please enter a valid description and amount.");
+    return;
+}
+
     // Pravljenje objekta transakcije
     const transaction = {
         description: description,
