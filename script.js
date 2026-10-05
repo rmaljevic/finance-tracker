@@ -11,6 +11,7 @@ if (savedTransactions) {
 // Uzimanje elemenata sa HTML-a
 const descriptionInput = document.getElementById("description");
 const amountInput = document.getElementById("amount");
+const dateInput = document.getElementById("date");
 const typeInput = document.getElementById("type");
 const addButton = document.getElementById("addButton");
 const clearButton = document.getElementById("clearButton");
@@ -61,6 +62,7 @@ if (description === "" || amount <= 0) {
         description: description,
         amount: amount,
         type: type
+        date: dateInput.value
     };
 
     transactions.push(transaction);
@@ -69,7 +71,7 @@ if (description === "" || amount <= 0) {
     // Pravljenje stavke u listi
     const listItem = document.createElement("li");
 
-    listItem.textContent = description + " - €" + amount.toFixed(2) + " (" + type + ")";
+    listItem.textContent = description + " - €" + amount.toFixed(2) + " (" + type + ") - " + dateInput.value;
 
     // Dugme za brisanje
     const deleteButton = document.createElement("button");
@@ -101,6 +103,7 @@ if (description === "" || amount <= 0) {
     // Brisanje iz inputa
     descriptionInput.value = "";
     amountInput.value = "";
+    dateInput.value = "";
 });
 
 // Prikaz sacuvanih transakcija nakon refresh-a
@@ -108,7 +111,7 @@ for (let transaction of transactions) {
 
     const listItem = document.createElement("li");
 
-    listItem.textContent = transaction.description + " - €" + transaction.amount.toFixed(2) + " (" + transaction.type + ")";
+    listItem.textContent = transaction.description + " - €" + transaction.amount.toFixed(2) + " (" + transaction.type + ") - " + transaction.date;
 
     // Dugme za brisanje
     const deleteButton = document.createElement("button");
