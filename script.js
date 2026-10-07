@@ -81,6 +81,26 @@ if (description === "" || amount <= 0) {
     editButton.textContent = "Edit";
 
     listItem.appendChild(editButton);
+
+    // Izmjena transakcije
+    editButton.addEventListener("click", function() {
+
+    const newDescription = prompt("Enter new description:", transaction.description);
+    const newAmount = Number(prompt("Enter new amount:", transaction.amount));
+
+    if (newDescription !== null && newAmount > 0) {
+
+        transaction.description = newDescription;
+        transaction.amount = newAmount;
+
+        localStorage.setItem("transactions", JSON.stringify(transactions));
+
+        listItem.firstChild.textContent = transaction.description + " - €" + transaction.amount.toFixed(2) + " (" + transaction.type + ") - " + transaction.date;
+
+        updateBalance();
+    }
+});
+
     listItem.appendChild(deleteButton);
 
     // Brisanje transakcije
