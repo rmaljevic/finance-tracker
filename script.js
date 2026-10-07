@@ -77,7 +77,10 @@ if (description === "" || amount <= 0) {
     // Dugme za brisanje
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
+    const editButton = document.createElement("button");
+    editButton.textContent = "Edit";
 
+    listItem.appendChild(editButton);
     listItem.appendChild(deleteButton);
 
     // Brisanje transakcije
