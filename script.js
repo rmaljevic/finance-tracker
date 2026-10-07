@@ -12,6 +12,7 @@ if (savedTransactions) {
 const descriptionInput = document.getElementById("description");
 const amountInput = document.getElementById("amount");
 const dateInput = document.getElementById("date");
+dateInput.value = new Date().toISOString().split("T")[0];
 const typeInput = document.getElementById("type");
 const addButton = document.getElementById("addButton");
 const clearButton = document.getElementById("clearButton");
