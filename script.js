@@ -14,6 +14,7 @@ const amountInput = document.getElementById("amount");
 const dateInput = document.getElementById("date");
 dateInput.value = new Date().toISOString().split("T")[0];
 const typeInput = document.getElementById("type");
+const categoryInput = document.getElementById("category");
 const addButton = document.getElementById("addButton");
 const clearButton = document.getElementById("clearButton");
 const transactionList = document.getElementById("transactionList");
@@ -63,6 +64,7 @@ if (description === "" || amount <= 0) {
         description: description,
         amount: amount,
         type: type
+        category: categoryInput.value;
         date: dateInput.value
     };
 
@@ -72,7 +74,7 @@ if (description === "" || amount <= 0) {
     // Pravljenje stavke u listi
     const listItem = document.createElement("li");
 
-    listItem.textContent = description + " - €" + amount.toFixed(2) + " (" + type + ") - " + dateInput.value;
+    listItem.textContent = description + " - €" + amount.toFixed(2) + " (" + type + ") - " + categoryInput.value + " - " + dateInput.value;
 
     // Dugme za brisanje
     const deleteButton = document.createElement("button");
@@ -135,8 +137,8 @@ for (let transaction of transactions) {
 
     const listItem = document.createElement("li");
 
-    listItem.textContent = transaction.description + " - €" + transaction.amount.toFixed(2) + " (" + transaction.type + ") - " + transaction.date;
-
+    listItem.textContent = transaction.description + " - €" + transaction.amount.toFixed(2) + " (" + transaction.type + ") - " + (transaction.category || "Other") + " - " + transaction.date;
+    
     // Dugme za brisanje
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
