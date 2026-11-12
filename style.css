@@ -30,6 +30,8 @@ header p {
     color: #64748b;
 }
 
+
+/* Kartice sa finansijskim podacima */
 .summary {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -55,6 +57,8 @@ header p {
     font-weight: bold;
 }
 
+
+/* Izgled glavnih sekcija */
 .form-section,
 .transactions-section {
     background-color: white;
@@ -69,6 +73,8 @@ header p {
     margin-bottom: 20px;
 }
 
+
+/* Polja za unos transakcije */
 .form-fields {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -85,6 +91,14 @@ select {
     background-color: white;
 }
 
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+
+/* Dugmad */
 button {
     padding: 11px 16px;
     border: none;
@@ -93,6 +107,7 @@ button {
     color: white;
     cursor: pointer;
     font-size: 14px;
+    transition: opacity 0.2s;
 }
 
 button:hover {
@@ -103,13 +118,17 @@ button:hover {
     grid-column: span 2;
 }
 
+
+/* Pretraga, kategorije i sortiranje */
 .filters {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
     gap: 12px;
     margin-bottom: 20px;
 }
 
+
+/* Lista transakcija */
 #transactionList {
     list-style: none;
 }
@@ -135,6 +154,8 @@ button:hover {
     font-size: 13px;
 }
 
+
+/* Dugmad pored svake transakcije */
 .transaction-buttons {
     display: flex;
     gap: 7px;
@@ -149,6 +170,8 @@ button:hover {
     background-color: #dc2626;
 }
 
+
+/* Boje za prihode i rashode */
 .income-text {
     color: #16a34a;
 }
@@ -162,6 +185,8 @@ button:hover {
     margin-top: 20px;
 }
 
+
+/* Poruka kada nema transakcija */
 #transactionList:empty::after {
     content: "No transactions found.";
     display: block;
@@ -169,7 +194,10 @@ button:hover {
     padding: 20px 0;
 }
 
+
+/* Prilagodjavanje za manje ekrane */
 @media (max-width: 700px) {
+
     .summary {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -181,9 +209,21 @@ button:hover {
     #addButton {
         grid-column: span 1;
     }
+
+    .filters {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .filters input {
+        grid-column: span 2;
+    }
+
 }
 
+
+/* Izgled na telefonima */
 @media (max-width: 450px) {
+
     .summary {
         grid-template-columns: 1fr;
     }
@@ -192,9 +232,13 @@ button:hover {
         grid-template-columns: 1fr;
     }
 
+    .filters input {
+        grid-column: span 1;
+    }
+
     #transactionList li {
         align-items: flex-start;
         flex-direction: column;
     }
-}
 
+}
