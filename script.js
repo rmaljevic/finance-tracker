@@ -1,15 +1,15 @@
 
-// Niz transakcija
+// Niz u koji smjestamo sve transakcije
 let transactions = [];
 
-// Ucitavanje sacuvanih transakcija
+// Uzimamo podatke koje smo ranije sacuvali
 let savedTransactions = localStorage.getItem("transactions");
 
 if (savedTransactions) {
     transactions = JSON.parse(savedTransactions);
 }
 
-// Uzimanje elemenata sa HTML-a
+// Povezujemo JavaScript sa HTML elementima
 const descriptionInput = document.getElementById("description");
 const amountInput = document.getElementById("amount");
 const typeInput = document.getElementById("type");
@@ -21,6 +21,7 @@ const clearButton = document.getElementById("clearButton");
 
 const searchInput = document.getElementById("searchInput");
 const filterCategory = document.getElementById("filterCategory");
+const sortTransactions = document.getElementById("sortTransactions");
 
 const transactionList = document.getElementById("transactionList");
 
@@ -29,9 +30,12 @@ const incomeDisplay = document.getElementById("income");
 const expensesDisplay = document.getElementById("expenses");
 const transactionCountDisplay = document.getElementById("transactionCount");
 
-// Postavljanje danasnjeg datuma
+
+// Automatski postavljamo danasnji datum
 function setTodayDate() {
+
     const today = new Date();
+
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, "0");
     const day = String(today.getDate()).padStart(2, "0");
@@ -41,25 +45,36 @@ function setTodayDate() {
 
 setTodayDate();
 
-// Cuvanje transakcija
+
+// Cuvamo sve transakcije u localStorage
 function saveTransactions() {
+
     localStorage.setItem("transactions", JSON.stringify(transactions));
+
 }
 
-// Update balance
+
+// Racunamo stanje na racunu, prihode i rashode
 function updateBalance() {
+
     let balance = 0;
     let income = 0;
     let expenses = 0;
 
     for (let transaction of transactions) {
+
         if (transaction.type === "income") {
+
             balance += transaction.amount;
             income += transaction.amount;
+
         } else {
+
             balance -= transaction.amount;
             expenses += transaction.amount;
+
         }
+
     }
 
     balanceDisplay.textContent = "€" + balance.toFixed(2);
@@ -67,28 +82,70 @@ function updateBalance() {
     expensesDisplay.textContent = "€" + expenses.toFixed(2);
 
     transactionCountDisplay.textContent = transactions.length;
+
 }
 
-// Prikaz transakcija
+
+// Prikazujemo transakcije na stranici
 function displayTransactions() {
+
     transactionList.innerHTML = "";
 
     const searchText = searchInput.value.toLowerCase();
     const selectedCategory = filterCategory.value;
 
-    for (let transaction of transactions) {
+    // Pravimo kopiju niza da ne mijenjamo originalne podatke
+    const sortedTransactions = [...transactions];
 
-        // Provjera pretrage
+    // Sortiramo transakcije prema izabranoj opciji
+    if (sortTransactions.value === "newest") {
+
+        sortedTransactions.sort((a, b) =>
+            new Date(b.date) - new Date(a.date)
+        );
+
+    }
+
+    else if (sortTransactions.value === "oldest") {
+
+        sortedTransactions.sort((a, b) =>
+            new Date(a.date) - new Date(b.date)
+        );
+
+    }
+
+    else if (sortTransactions.value === "highest") {
+
+        sortedTransactions.sort((a, b) =>
+            b.amount - a.amount
+        );
+
+    }
+
+    else if (sortTransactions.value === "lowest") {
+
+        sortedTransactions.sort((a, b) =>
+            a.amount - b.amount
+        );
+
+    }
+
+
+    // Prolazimo kroz sve sortirane transakcije
+    for (let transaction of sortedTransactions) {
+
+        // Provjeravamo da li opis odgovara pretrazi
         if (!transaction.description.toLowerCase().includes(searchText)) {
             continue;
         }
 
-        // Provjera kategorije
+        // Provjeravamo izabranu kategoriju
         const category = transaction.category || "Other";
 
         if (selectedCategory !== "all" && category !== selectedCategory) {
             continue;
         }
+
 
         const listItem = document.createElement("li");
 
@@ -107,16 +164,24 @@ function displayTransactions() {
             " | " + category +
             " | " + (transaction.date || "");
 
+
+        // Razlikujemo prihode i rashode bojom
         if (transaction.type === "income") {
+
             detailsText.classList.add("income-text");
+
         } else {
+
             detailsText.classList.add("expense-text");
+
         }
+
 
         transactionInfo.appendChild(descriptionText);
         transactionInfo.appendChild(detailsText);
 
-        // Dugmad za izmjenu i brisanje
+
+        // Pravimo dugmad za izmjenu i brisanje
         const buttonsDiv = document.createElement("div");
         buttonsDiv.className = "transaction-buttons";
 
@@ -128,7 +193,8 @@ function displayTransactions() {
         deleteButton.textContent = "Delete";
         deleteButton.className = "delete-button";
 
-        // Izmjena transakcije
+
+        // Omogucavamo izmjenu postojece transakcije
         editButton.addEventListener("click", function() {
 
             const newDescription = prompt(
@@ -141,9 +207,12 @@ function displayTransactions() {
             }
 
             if (newDescription.trim() === "") {
+
                 alert("Description cannot be empty!");
                 return;
+
             }
+
 
             const newAmount = prompt(
                 "Enter new amount:",
@@ -157,9 +226,12 @@ function displayTransactions() {
             const amountNumber = Number(newAmount);
 
             if (!Number.isFinite(amountNumber) || amountNumber <= 0) {
+
                 alert("Enter a valid amount!");
                 return;
+
             }
+
 
             transaction.description = newDescription.trim();
             transaction.amount = amountNumber;
@@ -167,10 +239,20 @@ function displayTransactions() {
             saveTransactions();
             updateBalance();
             displayTransactions();
+
         });
 
-        // Brisanje transakcije
+
+        // Brisemo pojedinacnu transakciju
         deleteButton.addEventListener("click", function() {
+
+            const confirmation = confirm(
+                "Are you sure you want to delete this transaction?"
+            );
+
+            if (!confirmation) {
+                return;
+            }
 
             const index = transactions.indexOf(transaction);
 
@@ -179,7 +261,9 @@ function displayTransactions() {
             saveTransactions();
             updateBalance();
             displayTransactions();
+
         });
+
 
         buttonsDiv.appendChild(editButton);
         buttonsDiv.appendChild(deleteButton);
@@ -188,8 +272,11 @@ function displayTransactions() {
         listItem.appendChild(buttonsDiv);
 
         transactionList.appendChild(listItem);
+
     }
+
 }
+
 
 // Dodavanje nove transakcije
 addButton.addEventListener("click", function() {
@@ -198,73 +285,109 @@ addButton.addEventListener("click", function() {
     const amount = Number(amountInput.value);
     const type = typeInput.value;
 
-    // Provjera unosa
+    // Provjeravamo da li je opis unesen
     if (description === "") {
+
         alert("Enter a description!");
         return;
+
     }
 
+    // Provjeravamo da li je iznos ispravan
     if (!Number.isFinite(amount) || amount <= 0) {
+
         alert("Enter a valid amount!");
         return;
+
     }
 
+    // Provjeravamo da li je izabran datum
     if (dateInput.value === "") {
+
         alert("Select a date!");
         return;
+
     }
 
-    // Pravljenje objekta transakcije
+
+    // Pravim objekat sa podacima nove transakcije
     const transaction = {
+
         description: description,
         amount: amount,
         type: type,
         category: categoryInput.value,
         date: dateInput.value
+
     };
 
+
+    // Dodajemo novu transakciju u niz
     transactions.push(transaction);
 
     saveTransactions();
     updateBalance();
     displayTransactions();
 
-    // Brisanje inputa nakon dodavanja
+
+    // Cistimo polja nakon dodavanja
     descriptionInput.value = "";
     amountInput.value = "";
 
     setTodayDate();
+
 });
 
-// Pretraga transakcija
+
+// Pretrazujemo transakcije po opisu
 searchInput.addEventListener("input", function() {
+
     displayTransactions();
+
 });
 
-// Filtriranje po kategoriji
+
+// Filtriramo transakcije po kategoriji
 filterCategory.addEventListener("change", function() {
+
     displayTransactions();
+
 });
 
-// Brisanje svih transakcija
+
+// Mijenjamo redosljed transakcija
+sortTransactions.addEventListener("change", function() {
+
+    displayTransactions();
+
+});
+
+
+// Brisemo sve transakcije odjednom
 clearButton.addEventListener("click", function() {
 
     if (transactions.length === 0) {
         return;
     }
 
-    const confirmation = confirm("Are you sure you want to delete all transactions?");
+    const confirmation = confirm(
+        "Are you sure you want to delete all transactions?"
+    );
 
     if (confirmation) {
+
         transactions = [];
 
         localStorage.removeItem("transactions");
 
         updateBalance();
         displayTransactions();
+
     }
+
 });
 
-// Pocetni prikaz
+
+// Prikazujemo podatke odmah nakon otvaranja stranice
 updateBalance();
 displayTransactions();
