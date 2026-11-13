@@ -2,6 +2,9 @@
 // Niz u koji smjestamo sve transakcije
 let transactions = [];
 
+// Pamtimo transakciju koju trenutno mijenjamo
+let editingTransaction = null;
+
 // Uzimamo podatke koje smo ranije sacuvali
 let savedTransactions = localStorage.getItem("transactions");
 
@@ -17,6 +20,9 @@ const categoryInput = document.getElementById("category");
 const dateInput = document.getElementById("date");
 
 const addButton = document.getElementById("addButton");
+const cancelEditButton = document.getElementById("cancelEditButton");
+const formTitle = document.getElementById("formTitle");
+
 const clearButton = document.getElementById("clearButton");
 
 const searchInput = document.getElementById("searchInput");
@@ -44,6 +50,25 @@ function setTodayDate() {
 }
 
 setTodayDate();
+
+
+// Cistimo formu i vracamo je u pocetno stanje
+function resetForm() {
+
+    descriptionInput.value = "";
+    amountInput.value = "";
+    typeInput.value = "income";
+    categoryInput.value = "Food";
+
+    setTodayDate();
+
+    editingTransaction = null;
+
+    formTitle.textContent = "Add Transaction";
+    addButton.textContent = "Add Transaction";
+    cancelEditButton.hidden = true;
+
+}
 
 
 // Cuvamo sve transakcije u localStorage
@@ -194,51 +219,26 @@ function displayTransactions() {
         deleteButton.className = "delete-button";
 
 
-        // Omogucavamo izmjenu postojece transakcije
+        // Ucitavamo podatke transakcije u formu za izmjenu
         editButton.addEventListener("click", function() {
 
-            const newDescription = prompt(
-                "Enter new description:",
-                transaction.description
-            );
+            editingTransaction = transaction;
 
-            if (newDescription === null) {
-                return;
-            }
+            descriptionInput.value = transaction.description;
+            amountInput.value = transaction.amount;
+            dateInput.value = transaction.date;
+            typeInput.value = transaction.type;
+            categoryInput.value = transaction.category || "Other";
 
-            if (newDescription.trim() === "") {
+            formTitle.textContent = "Edit Transaction";
+            addButton.textContent = "Save Changes";
+            cancelEditButton.hidden = false;
 
-                alert("Description cannot be empty!");
-                return;
-
-            }
-
-
-            const newAmount = prompt(
-                "Enter new amount:",
-                transaction.amount
-            );
-
-            if (newAmount === null) {
-                return;
-            }
-
-            const amountNumber = Number(newAmount);
-
-            if (!Number.isFinite(amountNumber) || amountNumber <= 0) {
-
-                alert("Enter a valid amount!");
-                return;
-
-            }
-
-
-            transaction.description = newDescription.trim();
-            transaction.amount = amountNumber;
-
-            saveTransactions();
-            updateBalance();
-            displayTransactions();
+            // Vracamo korisnika na formu
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
 
         });
 
@@ -252,6 +252,11 @@ function displayTransactions() {
 
             if (!confirmation) {
                 return;
+            }
+
+            // Ako brisemo transakciju koju mijenjamo, zatvaramo Edit
+            if (editingTransaction === transaction) {
+                resetForm();
             }
 
             const index = transactions.indexOf(transaction);
@@ -278,12 +283,14 @@ function displayTransactions() {
 }
 
 
-// Dodavanje nove transakcije
+// Dodavanje nove transakcije ili cuvanje izmjena
 addButton.addEventListener("click", function() {
 
     const description = descriptionInput.value.trim();
     const amount = Number(amountInput.value);
     const type = typeInput.value;
+    const category = categoryInput.value;
+    const date = dateInput.value;
 
     // Provjeravamo da li je opis unesen
     if (description === "") {
@@ -302,7 +309,7 @@ addButton.addEventListener("click", function() {
     }
 
     // Provjeravamo da li je izabran datum
-    if (dateInput.value === "") {
+    if (date === "") {
 
         alert("Select a date!");
         return;
@@ -310,31 +317,48 @@ addButton.addEventListener("click", function() {
     }
 
 
-    // Pravim objekat sa podacima nove transakcije
-    const transaction = {
+    // Ako mijenjamo postojecu transakciju
+    if (editingTransaction !== null) {
 
-        description: description,
-        amount: amount,
-        type: type,
-        category: categoryInput.value,
-        date: dateInput.value
+        editingTransaction.description = description;
+        editingTransaction.amount = amount;
+        editingTransaction.date = date;
+        editingTransaction.type = type;
+        editingTransaction.category = category;
 
-    };
+    }
 
+    // Ako dodajemo novu transakciju
+    else {
 
-    // Dodajemo novu transakciju u niz
-    transactions.push(transaction);
+        const transaction = {
+
+            description: description,
+            amount: amount,
+            type: type,
+            category: category,
+            date: date
+
+        };
+
+        transactions.push(transaction);
+
+    }
+
 
     saveTransactions();
     updateBalance();
     displayTransactions();
 
+    resetForm();
 
-    // Cistimo polja nakon dodavanja
-    descriptionInput.value = "";
-    amountInput.value = "";
+});
 
-    setTodayDate();
+
+// Otkazujemo izmjenu i vracamo formu u pocetno stanje
+cancelEditButton.addEventListener("click", function() {
+
+    resetForm();
 
 });
 
@@ -380,6 +404,7 @@ clearButton.addEventListener("click", function() {
 
         localStorage.removeItem("transactions");
 
+        resetForm();
         updateBalance();
         displayTransactions();
 
