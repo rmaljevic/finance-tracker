@@ -12,6 +12,7 @@ if (savedTransactions) {
     transactions = JSON.parse(savedTransactions);
 }
 
+
 // Povezujemo JavaScript sa HTML elementima
 const descriptionInput = document.getElementById("description");
 const amountInput = document.getElementById("amount");
@@ -36,6 +37,18 @@ const incomeDisplay = document.getElementById("income");
 const expensesDisplay = document.getElementById("expenses");
 const transactionCountDisplay = document.getElementById("transactionCount");
 
+// Elementi za mjesecni pregled
+const monthPicker = document.getElementById("monthPicker");
+const monthlyIncomeDisplay = document.getElementById("monthlyIncome");
+const monthlyExpensesDisplay = document.getElementById("monthlyExpenses");
+const monthlyBalanceDisplay = document.getElementById("monthlyBalance");
+
+const incomeChartValue = document.getElementById("incomeChartValue");
+const expensesChartValue = document.getElementById("expensesChartValue");
+
+const incomeBar = document.getElementById("incomeBar");
+const expensesBar = document.getElementById("expensesBar");
+
 
 // Automatski postavljamo danasnji datum
 function setTodayDate() {
@@ -50,6 +63,21 @@ function setTodayDate() {
 }
 
 setTodayDate();
+
+
+// Postavljamo trenutni mjesec u mjesecnom pregledu
+function setCurrentMonth() {
+
+    const today = new Date();
+
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+
+    monthPicker.value = year + "-" + month;
+
+}
+
+setCurrentMonth();
 
 
 // Cistimo formu i vracamo je u pocetno stanje
@@ -107,6 +135,67 @@ function updateBalance() {
     expensesDisplay.textContent = "€" + expenses.toFixed(2);
 
     transactionCountDisplay.textContent = transactions.length;
+
+}
+
+
+// Racunamo prihode i rashode za izabrani mjesec
+function updateMonthlyOverview() {
+
+    let monthlyIncome = 0;
+    let monthlyExpenses = 0;
+
+    const selectedMonth = monthPicker.value;
+
+    // Prolazimo kroz sve transakcije
+    for (let transaction of transactions) {
+
+        // Uzimamo samo transakcije iz izabranog mjeseca
+        if (transaction.date && transaction.date.startsWith(selectedMonth)) {
+
+            if (transaction.type === "income") {
+
+                monthlyIncome += transaction.amount;
+
+            } else {
+
+                monthlyExpenses += transaction.amount;
+
+            }
+
+        }
+
+    }
+
+    // Racunamo mjesecni balans
+    const monthlyBalance = monthlyIncome - monthlyExpenses;
+
+    // Prikazujemo izracunate podatke
+    monthlyIncomeDisplay.textContent = "€" + monthlyIncome.toFixed(2);
+    monthlyExpensesDisplay.textContent = "€" + monthlyExpenses.toFixed(2);
+    monthlyBalanceDisplay.textContent = "€" + monthlyBalance.toFixed(2);
+
+    // Prikazujemo vrijednosti pored grafikona
+    incomeChartValue.textContent = "€" + monthlyIncome.toFixed(2);
+    expensesChartValue.textContent = "€" + monthlyExpenses.toFixed(2);
+
+    // Pronalazimo veci iznos da bismo odredili velicinu grafikona
+    const biggestAmount = Math.max(monthlyIncome, monthlyExpenses);
+
+    let incomeWidth = 0;
+    let expensesWidth = 0;
+
+    // Racunamo koliko prostora zauzima svaki iznos
+    if (biggestAmount > 0) {
+
+        incomeWidth = (monthlyIncome / biggestAmount) * 100;
+        expensesWidth = (monthlyExpenses / biggestAmount) * 100;
+
+    }
+
+    // Postavljamo sirinu grafikona
+    incomeBar.style.width = incomeWidth + "%";
+    expensesBar.style.width = expensesWidth + "%";
 
 }
 
@@ -265,6 +354,7 @@ function displayTransactions() {
 
             saveTransactions();
             updateBalance();
+            updateMonthlyOverview();
             displayTransactions();
 
         });
@@ -348,6 +438,7 @@ addButton.addEventListener("click", function() {
 
     saveTransactions();
     updateBalance();
+    updateMonthlyOverview();
     displayTransactions();
 
     resetForm();
@@ -359,6 +450,14 @@ addButton.addEventListener("click", function() {
 cancelEditButton.addEventListener("click", function() {
 
     resetForm();
+
+});
+
+
+// Kada izaberemo drugi mjesec, osvjezavamo pregled
+monthPicker.addEventListener("change", function() {
+
+    updateMonthlyOverview();
 
 });
 
@@ -406,6 +505,7 @@ clearButton.addEventListener("click", function() {
 
         resetForm();
         updateBalance();
+        updateMonthlyOverview();
         displayTransactions();
 
     }
@@ -415,4 +515,5 @@ clearButton.addEventListener("click", function() {
 
 // Prikazujemo podatke odmah nakon otvaranja stranice
 updateBalance();
+updateMonthlyOverview();
 displayTransactions();
